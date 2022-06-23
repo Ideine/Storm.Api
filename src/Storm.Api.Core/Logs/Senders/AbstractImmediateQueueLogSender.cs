@@ -9,7 +9,12 @@ namespace Storm.Api.Core.Logs.Senders
 
 		protected AbstractImmediateQueueLogSender(ILogService logService)
 		{
-			_worker = new BackgroundItemQueueWorker<string>(logService, Send);
+			_worker = new BackgroundItemQueueWorker<string>(
+				logService,
+				Send,
+				shouldLogFailure: false,//false otherwhise it's an infinite loop.,
+				nbMaxTry: 5
+			);
 		}
 
 		public void Enqueue(LogLevel level, string entry)
@@ -17,6 +22,6 @@ namespace Storm.Api.Core.Logs.Senders
 			_worker.Queue(entry);
 		}
 
-		protected abstract Task<bool> Send(string entry);
+		protected abstract Task Send(string entry);
 	}
 }

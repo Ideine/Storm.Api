@@ -7,8 +7,8 @@ namespace Storm.Api.Core.Workers
 	public class BackgroundItemQueueWorker<TWorkItem> : BackgroundItemWorker<TWorkItem>, IWorker<TWorkItem>
 		where TWorkItem : class
 	{
-		public BackgroundItemQueueWorker(ILogService logService, Func<TWorkItem, Task<bool>> itemAction, int? discardAfterFailAttemptsCount = 1)
-			: base(logService, itemAction, discardAfterFailAttemptsCount)
+		public BackgroundItemQueueWorker(ILogService logService, Func<TWorkItem, Task> itemAction, bool shouldLogFailure, int nbMaxTry)
+			: base(logService, itemAction, shouldLogFailure, nbMaxTry)
 		{
 		}
 	}

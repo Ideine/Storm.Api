@@ -12,7 +12,7 @@ namespace Storm.Api.Core.Logs.ElasticSearch.Senders
 			_client = client;
 		}
 
-		protected override Task<bool> Send(string entry)
+		protected override Task Send(string entry)
 		{
 			return _client.Send(entry);
 		}
