@@ -7,8 +7,8 @@ namespace Storm.Api.Core.Logs.ElasticSearch.Senders
 {
 	public interface IElasticSender
 	{
-		Task<bool> Send(string entry);
-		Task<bool> Send(IReadOnlyList<string> entries);
+		Task Send(string entry);
+		Task Send(IReadOnlyList<string> entries);
 	}
 
 	internal class ElasticSender : IElasticSender
@@ -22,19 +22,17 @@ namespace Storm.Api.Core.Logs.ElasticSearch.Senders
 			_index = index;
 		}
 
-		public async Task<bool> Send(string entry)
+		public async Task Send(string entry)
 		{
 			StringResponse result = await _client.IndexAsync<StringResponse>(_index, PostData.String(entry));
 
-			if (result.HttpStatusCode is int statusCode && statusCode >= 200 && statusCode < 300)
+			if (!(result.HttpStatusCode is int statusCode) || statusCode < 200 || statusCode >= 300)
 			{
-				return true;
+				throw new System.Exception($"Log entry failed with {nameof(result.HttpStatusCode)}: {result.HttpStatusCode}");
 			}
-
-			return false;
 		}
 
-		public async Task<bool> Send(IReadOnlyList<string> entries)
+		public async Task Send(IReadOnlyList<string> entries)
 		{
 			StringBuilder content = new StringBuilder(entries.Count * (200 + 75));
 
@@ -49,12 +47,10 @@ namespace Storm.Api.Core.Logs.ElasticSearch.Senders
 			string body = content.ToString();
 			StringResponse result = await _client.BulkAsync<StringResponse>(_index, PostData.String(body));
 
-			if (result.HttpStatusCode is int statusCode && statusCode >= 200 && statusCode < 300)
+			if (!(result.HttpStatusCode is int statusCode) || statusCode < 200 || statusCode >= 300)
 			{
-				return true;
+				throw new System.Exception($"Log entry failed with {nameof(result.HttpStatusCode)}: {result.HttpStatusCode}");
 			}
-
-			return false;
 		}
 	}
 }
