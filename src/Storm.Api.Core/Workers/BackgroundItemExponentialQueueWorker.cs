@@ -9,7 +9,7 @@ namespace Storm.Api.Core.Workers
 	{
 		private readonly ExponentialBackOffStrategy _backOffStrategy;
 
-		public BackgroundItemExponentialQueueWorker(ILogService logService, Func<TWorkItem, Task<bool>> itemAction, Action<TWorkItem, Exception> onException = null, int? discardAfterFailAttemptsCount = null) : base(logService, itemAction, onException, discardAfterFailAttemptsCount)
+		public BackgroundItemExponentialQueueWorker(ILogService logService, Func<TWorkItem, Task<bool>> itemAction, int? discardAfterFailAttemptsCount = null) : base(logService, itemAction, discardAfterFailAttemptsCount)
 		{
 			_backOffStrategy = new ExponentialBackOffStrategy(5000, 4);
 		}

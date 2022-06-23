@@ -17,14 +17,14 @@ namespace Storm.Api.Core.Workers
 		private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(0);
 
 		private readonly Func<TWorkItem, Task<bool>> _itemAction;
-		private readonly Action<TWorkItem, Exception> _onException;
+
 		private readonly int? _discardAfterFailAttemptsCount;
 
-		protected BackgroundItemWorker(ILogService logService, Func<TWorkItem, Task<bool>> itemAction, Action<TWorkItem, Exception> onException, int? discardAfterFailAttemptsCount)
+		protected BackgroundItemWorker(ILogService logService, Func<TWorkItem, Task<bool>> itemAction, int? discardAfterFailAttemptsCount)
 		{
 			_logService = logService;
 			_itemAction = itemAction;
-			_onException = onException;
+
 			_discardAfterFailAttemptsCount = discardAfterFailAttemptsCount;
 
 			_worker = new BackgroundWorker(_logService, RunAsync);
@@ -97,7 +97,7 @@ namespace Storm.Api.Core.Workers
 						.WriteException(ex)
 					);
 
-					_onException?.Invoke(item, ex);
+
 				}
 			}
 		}
