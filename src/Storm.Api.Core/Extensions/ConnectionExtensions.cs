@@ -126,7 +126,7 @@ namespace Storm.Api.Core.Extensions
 			}
 		}
 
-		private static void AssignNullIfNeeded<T>(ref T entity)
+		public static void AssignNullIfNeeded<T>(ref T entity)
 			where T : ICommonEntity
 		{
 			if (entity.IsNullOrDefault())
