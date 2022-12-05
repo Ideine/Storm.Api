@@ -10,10 +10,10 @@ namespace Storm.Api.Configurations
 			EnvironmentHelper.SetFromEnvironment(hostingEnvironment.EnvironmentName);
 
 			configurationBuilder
-				.AddJsonFile("appsettings.json", true, true)
-				.AddJsonFile("projectsettings.json", true, true)
-				.AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", true, true)
-				.AddJsonFile($"projectsettings.{hostingEnvironment.EnvironmentName}.json", true, true)
+				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+				.AddJsonFile("projectsettings.json", optional: true, reloadOnChange: false)
+				.AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: false)
+				.AddJsonFile($"projectsettings.{hostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: false)
 				.AddEnvironmentVariables();
 		}
 	}
