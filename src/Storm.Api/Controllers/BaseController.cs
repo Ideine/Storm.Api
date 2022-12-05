@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Storm.Api.Core;
 using Storm.Api.Core.CQRS;
-using Storm.Api.Core.Domains.Results;
 using Storm.Api.Core.Exceptions;
 using Storm.Api.Core.Extensions;
 using Storm.Api.Core.Logs;
@@ -154,7 +153,7 @@ namespace Storm.Api.Controllers
 						return File(result.AsRawData(), result.ContentType);
 					}
 
-					if(result.IsStreamData)
+					if (result.IsStreamData)
 					{
 						return File(result.AsStreamData(), result.ContentType);
 					}
@@ -167,7 +166,7 @@ namespace Storm.Api.Controllers
 					return File(result.AsRawData(), result.ContentType, result.FileName);
 				}
 
-				if(result.IsStreamData)
+				if (result.IsStreamData)
 				{
 					return File(result.AsStreamData(), result.ContentType, result.FileName);
 				}
@@ -175,7 +174,5 @@ namespace Storm.Api.Controllers
 				throw new InvalidOperationException("Not supported file data format");
 			});
 		}
-
-
 	}
 }
