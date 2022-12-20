@@ -1,20 +1,17 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
-using Storm.Api.Core.Validations;
+using Microsoft.Extensions.Primitives;
 
 namespace Storm.Api.Extensions
 {
 	public static class HttpRequestExtensions
 	{
-		public static bool TryGetHeaderOrQueryParameter(this IHttpContextAccessor contextAccessor, string headerName, string queryStringParameterName, out string value) =>
-			contextAccessor.HttpContext.Request.TryGetHeaderOrQueryParameter(headerName, queryStringParameterName, out value);
+		public static bool TryGetHeaderOrQueryParameter(this IHttpContextAccessor contextAccessor, string headerName, string queryStringParameterName, out string value) => contextAccessor.HttpContext!.Request.TryGetHeaderOrQueryParameter(headerName, queryStringParameterName, out value);
 
-		public static bool TryGetHeader(this IHttpContextAccessor contextAccessor, string headerName, out string value) =>
-			contextAccessor.HttpContext.Request.TryGetHeader(headerName, out value);
+		public static bool TryGetHeader(this IHttpContextAccessor contextAccessor, string headerName, out string value) => contextAccessor.HttpContext!.Request.TryGetHeader(headerName, out value);
 
-		public static bool TryGetQueryParameter(this IHttpContextAccessor contextAccessor, string queryStringParameterName, out string value) =>
-			contextAccessor.HttpContext.Request.TryGetQueryParameter(queryStringParameterName, out value);
+		public static bool TryGetQueryParameter(this IHttpContextAccessor contextAccessor, string queryStringParameterName, out string value) => contextAccessor.HttpContext!.Request.TryGetQueryParameter(queryStringParameterName, out value);
 
 		public static bool TryGetHeaderOrQueryParameter(this HttpRequest request, string headerName, string queryStringParameterName, out string value)
 		{
@@ -34,10 +31,10 @@ namespace Storm.Api.Extensions
 
 		public static bool TryGetHeader(this HttpRequest request, string headerName, out string value)
 		{
-			if (request.Headers.TryGetValue(headerName, out var values))
+			if (request.Headers.TryGetValue(headerName, out StringValues values))
 			{
 				value = values.ToString().Trim();
-				if (value.IsNotNullOrEmpty())
+				if (!string.IsNullOrEmpty(value))
 				{
 					return true;
 				}
@@ -49,10 +46,10 @@ namespace Storm.Api.Extensions
 
 		public static bool TryGetQueryParameter(this HttpRequest request, string queryParameterName, out string value)
 		{
-			if (request.Query.TryGetValue(queryParameterName, out var values))
+			if (request.Query.TryGetValue(queryParameterName, out StringValues values))
 			{
 				value = values.ToString().Trim();
-				if (value.IsNotNullOrEmpty())
+				if (!string.IsNullOrEmpty(value))
 				{
 					return true;
 				}
@@ -62,12 +59,11 @@ namespace Storm.Api.Extensions
 			return false;
 		}
 
-		public static CultureInfo RequestCulture(this IHttpContextAccessor contextAccessor) =>
-			contextAccessor.HttpContext.Request.RequestCulture();
+		public static CultureInfo RequestCulture(this IHttpContextAccessor contextAccessor) => contextAccessor.HttpContext!.Request.RequestCulture();
 
 		public static CultureInfo RequestCulture(this HttpRequest request)
 		{
-			var feature = request.HttpContext.Features.Get<IRequestCultureFeature>();
+			IRequestCultureFeature feature = request.HttpContext.Features.Get<IRequestCultureFeature>();
 			return feature.RequestCulture.Culture;
 		}
 	}
