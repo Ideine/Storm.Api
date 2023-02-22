@@ -14,7 +14,7 @@ namespace Storm.Api.Middlewares
 
 				context.RequestServices
 					.GetService<IDatabaseService>()
-					.Dispose();
+					?.Dispose();
 			});
 		}
 	}
