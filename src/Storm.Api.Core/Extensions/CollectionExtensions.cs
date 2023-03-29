@@ -33,6 +33,28 @@ namespace Storm.Api.Core.Extensions
 
 		public static async Task<List<TOutput>> ConvertAll<TInput, TOutput>(this Task<List<TInput>> source, Func<TInput, TOutput> mapper) => (await source).ConvertAll(mapper);
 
+		public static IEnumerable<List<T>> ByBunchOf<T>(this IEnumerable<T> source, int bunchMaxSize)
+		{
+			using (IEnumerator<T> enumerator = source.GetEnumerator())
+			{
+				while (enumerator.MoveNext())
+				{
+					List<T> bunch = new List<T>(bunchMaxSize);
+					for (int i = 0 ; i < bunchMaxSize ; i++)
+					{
+						bunch.Add(enumerator.Current);
+
+						if (!enumerator.MoveNext())
+						{
+							break;
+						}
+					}
+
+					yield return bunch;
+				}
+			}
+		}
+
 		public static bool None<T>(this IEnumerable<T> source)
 		{
 			if (source == null)
