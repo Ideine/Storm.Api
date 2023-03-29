@@ -49,7 +49,9 @@ namespace Storm.Api.Configurations
 								configuration["database"],
 								configuration["user"],
 								configuration["password"],
-								configuration.GetValue("encrypt", false)
+								configuration.GetValue("encrypt", false),
+								configuration.GetValue("useCustomMaxPoolSize", false),
+								configuration.GetValue<int>("customMaxPoolSize", 100)
 							);
 					case DatabaseType.SqlServer:
 						return configurationBuilder

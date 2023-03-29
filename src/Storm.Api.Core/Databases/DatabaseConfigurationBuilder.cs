@@ -138,8 +138,15 @@ namespace Storm.Api.Core.Databases
 		/// <param name="password">Database user password</param>
 		/// <param name="encrypt">Encrypt=True or Encrypt=False in connection string</param>
 		/// <returns>this</returns>
-		public DatabaseConfigurationBuilder UseAzureSqlServer(string host, string database, string login, string password, bool encrypt = true)
-			=> UseSqlServer(string.Format(AZURE_SQL_SERVER_FORMAT, host, database, login, password, encrypt ? "True" : "False"));
+		public DatabaseConfigurationBuilder UseAzureSqlServer(string host, string database, string login, string password, bool encrypt = true, bool changeMaxPoolSize = false, int maxPoolSize = 100)
+		{
+			string connectionString = string.Format(AZURE_SQL_SERVER_FORMAT, host, database, login, password, encrypt ? "True" : "False");
+			if (changeMaxPoolSize)
+			{
+				connectionString += $"Max Pool Size={maxPoolSize};";
+			}
+			return UseSqlServer(connectionString);
+		}
 
 		public DatabaseConfigurationBuilder UseDebug(bool enableDebug)
 		{
