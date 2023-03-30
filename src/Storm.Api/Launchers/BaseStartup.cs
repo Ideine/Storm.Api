@@ -66,7 +66,6 @@ namespace Storm.Api.Launchers
 				.AddNewtonsoftJson(options =>
 				{
 					options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
-					options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 					options.SerializerSettings.ContractResolver = new DefaultContractResolver
 					{
 						NamingStrategy = new DefaultNamingStrategy()
