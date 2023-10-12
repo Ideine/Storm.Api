@@ -19,6 +19,8 @@ namespace Storm.Api.Core.CQRS
 
 		public BaseAuthenticatedAction(IServiceProvider services, TAuthenticatorParameter authenticatorParameter) : base(services)
 		{
+			_mustBlock = true;
+
 			_authenticatorParameter = authenticatorParameter;
 			_authenticator = Resolve<IActionAuthenticator<TAccount, TAuthenticatorParameter>>();
 		}

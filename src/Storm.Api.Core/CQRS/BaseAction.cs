@@ -12,12 +12,16 @@ namespace Storm.Api.Core.CQRS
 
 	public abstract class BaseAction<TParameter, TOutput> : BaseServiceContainer, IAction<TParameter, TOutput>
 	{
+		protected bool _mustBlock = false;
+
 		protected BaseAction(IServiceProvider services) : base(services)
 		{
 		}
 
 		public virtual Task<TOutput> Execute(TParameter parameter)
 		{
+			BlockAction();
+
 			if (!ValidateParameter(parameter))
 			{
 				throw new DomainHttpCodeException(HttpStatusCode.BadRequest);
@@ -25,6 +29,14 @@ namespace Storm.Api.Core.CQRS
 
 			PrepareParameter(parameter);
 			return Action(parameter);
+		}
+
+		public virtual void BlockAction()
+		{
+			if(_mustBlock)
+			{
+				throw new DomainHttpCodeException(HttpStatusCode.NotFound, "Block Api");
+			}
 		}
 
 		protected virtual bool ValidateParameter(TParameter parameter)
